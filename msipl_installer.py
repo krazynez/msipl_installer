@@ -1,11 +1,13 @@
 import argparse
 import struct
 import os
+import platform
 import math
 import subprocess
 import re
 
 is_windows = os.name == 'nt'
+is_macos = platform.system() == 'Darwin'
 
 parser = argparse.ArgumentParser(description='MS IPL Installer')
 
@@ -72,6 +74,20 @@ if is_windows:
 
     def openDisk():
         return open(diskID, 'rb+')
+
+elif is_macos:
+    diskID = f'/dev/{args.devname}'
+    subprocess.run(['diskutil', 'umount', f'{diskID}s1'])
+
+    def checkDiskType():
+        block_size = subprocess.Popen([f"diskutil info {diskID} | awk '/Device Block Size/ {{print $4}}'"], shell=True, stdout=subprocess.PIPE)
+        isBytesPerSecOk = bytesPerSector = int(block_size.stdout.read().decode())
+        return True
+
+    def openDisk():
+        return open(diskID, 'rb+')
+
+
 else:
     diskID = f'/dev/{args.devname}'
 
