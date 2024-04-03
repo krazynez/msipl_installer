@@ -77,7 +77,7 @@ if is_windows:
 
 elif is_macos:
     diskID = f'/dev/{args.devname}'
-    subprocess.run(['diskutil', 'umount', f'{diskID}s1'])
+    subprocess.run(['diskutil', 'umountDisk', 'force', f'{diskID}'])
 
     def checkDiskType():
         block_size = subprocess.Popen([f"diskutil info {diskID} | awk '/Device Block Size/ {{print $4}}'"], shell=True, stdout=subprocess.PIPE)
