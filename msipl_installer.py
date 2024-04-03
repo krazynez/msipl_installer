@@ -1,6 +1,7 @@
 import argparse
 import struct
 import os
+import time
 import platform
 import math
 import subprocess
@@ -86,6 +87,7 @@ elif is_macos:
     def openDisk():
         subprocess.run(['diskutil', 'umountDisk', 'force', f'{diskID}'])
         subprocess.run(['sync'])
+        time.sleep(2)
         return open(diskID, 'rb+')
 
 
